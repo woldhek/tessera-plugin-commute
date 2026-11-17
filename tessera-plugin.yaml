@@ -1,0 +1,56 @@
+# Commute: how far someone is on the way between work and home, how they travel right now, and why the screen thinks
+# so. The data comes from the Home Assistant integration Commute (github.com/woldhek/ha-commute), which follows each
+# person; the screen only draws it. Every field is explained in docs/MANIFEST.md of the plugins repository.
+id: commute
+version: 0.1.0
+api: "0.26"
+icon: train
+maintainer: woldhek
+license: MIT
+stage: beta
+topics: [travel, home]
+requires:
+  esphome: 2026.6.2
+boards: any
+flash_kb: 30
+
+permissions:
+  # The top bar's item reads the commute sensor chosen when the plugin was added.
+  read_entities: ["{bar_person}"]
+
+inputs:
+  - { id: bar_person, kind: entity, domains: [sensor], scope: screen, label: input_bar_person, hint: input_bar_person_hint }
+
+tiles:
+  # One person: the trip so far in the colours of how they travelled, where they are now, and the arrival. A tap
+  # opens the map of the trip.
+  - id: commute
+    name: tile_commute
+    icon: train
+    sizes: { min: 1x1, max: 4x4, full: true }
+    memory: 1400
+    domains: [sensor]
+    has_attributes: [commute_phase]
+    attributes: [person, commute_phase, progress, eta_at, place_at, speed, activity, ns_distance, train, delay, basis,
+                 leg_modes, leg_from, leg_times, trail, work_offset]
+    example: tile_commute_example
+    preview: { title: "{person}", value: "{progress}%" }
+  # Several people: a lane each.
+  - id: commutes
+    name: tile_commutes
+    icon: home-map-marker
+    sizes: { min: 2x1, max: 4x4 }
+    memory: 1600
+    example: tile_commutes_example
+    options:
+      - { id: person_1, kind: entity, domains: [sensor], matches: [commute], attributes: [person, commute_phase, progress, eta_at, delay, leg_modes, leg_from, leg_times], label: opt_person_1 }
+      - { id: person_2, kind: entity, domains: [sensor], matches: [commute], attributes: [person, commute_phase, progress, eta_at, delay, leg_modes, leg_from, leg_times], label: opt_person_2 }
+      - { id: person_3, kind: entity, domains: [sensor], matches: [commute], attributes: [person, commute_phase, progress, eta_at, delay, leg_modes, leg_from, leg_times], label: opt_person_3 }
+      - { id: person_4, kind: entity, domains: [sensor], matches: [commute], attributes: [person, commute_phase, progress, eta_at, delay, leg_modes, leg_from, leg_times], label: opt_person_4 }
+
+cards:
+  # The map of the trip, the legs with their times, and what the guess is based on.
+  - { id: trip, name: card_trip, wide: true }
+
+bar_items:
+  - { id: progress, label: bar_progress, icon: train, example: bar_example }

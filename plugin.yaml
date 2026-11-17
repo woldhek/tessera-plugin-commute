@@ -1,0 +1,32 @@
+# What a screen gets when it takes this plugin. Tessera includes this file from the screen's <name>.plugins.yaml with
+# BAR_PERSON filled in (the commute sensor chosen when the plugin was added), and adds the components folder beside it.
+defaults:
+  BAR_PERSON: sensor.commute_for_top_bar
+
+# The commute sensor the top bar's item reads, straight from Home Assistant: how they travel, how far, and who.
+text_sensor:
+  - platform: homeassistant
+    id: commute_bar_mode
+    entity_id: ${BAR_PERSON}
+    internal: true
+  - platform: homeassistant
+    id: commute_bar_phase
+    entity_id: ${BAR_PERSON}
+    attribute: commute_phase
+    internal: true
+  - platform: homeassistant
+    id: commute_bar_progress
+    entity_id: ${BAR_PERSON}
+    attribute: progress
+    internal: true
+  - platform: homeassistant
+    id: commute_bar_person
+    entity_id: ${BAR_PERSON}
+    attribute: person
+    internal: true
+
+commute:
+  mode: commute_bar_mode
+  phase: commute_bar_phase
+  progress: commute_bar_progress
+  person: commute_bar_person

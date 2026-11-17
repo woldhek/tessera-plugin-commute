@@ -1,0 +1,35 @@
+# What tools/preview.py shows (docs/PREVIEW.md of the plugins repository). The states are what the Commute
+# integration (github.com/woldhek/ha-commute) made of rides played back through it: Anton on the way home, walking,
+# then the metro, now on the train with a delay; Sam cycling home; someone who just left home; someone at home.
+tiles:
+  - tile: commute
+    name: Anton
+    entity: sensor.anton_commute
+    sizes: [2x1, 1x1, 2x2, 4x2, full]
+  - tile: commutes
+    name: Everyone
+    options: { person_1: sensor.anton_commute, person_2: sensor.sam_commute, person_3: sensor.kim_commute }
+    sizes: [2x1, 4x1, 2x2]
+  - tile: commute
+    name: Just left
+    entity: sensor.maybe_commute
+    sizes: [2x1]
+  - tile: commute
+    name: At home
+    entity: sensor.kim_commute
+    sizes: [2x1, 1x1]
+  - tile: commute
+    name: No sensor
+    sizes: [2x1]
+
+cards:
+  - { card: trip, entity: sensor.anton_commute }
+
+states:
+  sensor.anton_commute: {"state": "train", "attributes": {"person": "Anton", "commute_phase": "to_home", "progress": 55, "eta_at": "{now+36m}", "place_at": "{now+0m}", "speed": 100, "activity": null, "ns_distance": 0.4, "train": "IC 17:51", "delay": 3, "basis": ["ns_tracker", "speed"], "leg_modes": ["walking", "transit", "train"], "leg_from": [0, 0, 13], "leg_times": ["{epoch-15m}", "{epoch-9m}", "{epoch-6m}"], "trail": [-19707, 15986, 0, -19632, 16090, 0, -19556, 16195, 0, -19481, 16301, 0, -19311, 16535, 0, -19141, 16771, 0, -18970, 17007, 3, -18801, 17243, 3, -16166, 14899, 2, -13531, 12554, 2, -10896, 10209, 2, -8261, 7864, 2], "work_offset": [-19707, 15986]}}
+  sensor.sam_commute: {"state": "cycling", "attributes": {"person": "Sam", "commute_phase": "to_home", "progress": 30, "eta_at": "{now+65m}", "place_at": "{now+14m}", "speed": 19, "activity": "Cycling", "ns_distance": null, "train": null, "delay": null, "basis": ["activity"], "leg_modes": ["cycling"], "leg_from": [0], "leg_times": ["{epoch-7m}"], "trail": [-19707, 15986, 1, -19170, 15549, 1, -18633, 15114, 1, -18095, 14678, 1, -17557, 14241, 1, -17020, 13806, 1, -16483, 13370, 1, -15945, 12934, 1, -15408, 12498, 1, -14870, 12062, 1, -14333, 11626, 1, -13795, 11190, 1], "work_offset": [-19707, 15986]}}
+  sensor.maybe_commute: {"state": "cycling", "attributes": {"person": "Anton", "commute_phase": "maybe", "progress": 4, "eta_at": null, "place_at": "{now-1m}", "speed": 17, "basis": ["speed"], "leg_modes": ["cycling"], "leg_from": [0], "leg_times": ["{epoch-6m}"], "trail": [], "work_offset": [-19707, 15986]}}
+  sensor.kim_commute: {"state": "none", "attributes": {"person": "Kim", "commute_phase": "home", "progress": null, "basis": [], "leg_modes": [], "leg_from": [], "leg_times": [], "trail": [], "work_offset": [-19707, 15986]}}
+  sensor.commute_for_top_bar: { state: train, attributes: { commute_phase: to_home, progress: 55, person: Anton } }
+
+time_zone: Europe/Amsterdam
